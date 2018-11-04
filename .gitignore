@@ -1,0 +1,14 @@
+.gradle
+build/
+*.idea/
+*.iml
+*.log
+*.pid
+out
+target
+*.pid
+.classpath
+.project
+.settings
+bin
+dist

@@ -1,0 +1,7 @@
+rootProject.name = 'eventuate-event-sourcing'
+include 'common'
+include 'common-swagger'
+include 'catalog-service'
+include 'catalog-view-service'
+include 'order-service'
+

@@ -1,0 +1,32 @@
+apply plugin: EventuateDependencyPlugin
+apply plugin: 'spring-boot'
+
+dependencies {
+    compile project(":common")
+    compile project(":common-swagger")
+
+    compile 'mysql:mysql-connector-java:5.1.36'
+
+    compile("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
+    compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
+    compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
+    //compile("org.springframework
+    // .hateoas:spring-hateoas:$springHateoasVersion")
+
+    //testCompile project(":test-utils")
+
+    testCompile 'com.jayway.restassured:rest-assured:2.9.0'
+    testCompile 'com.jayway.restassured:spring-mock-mvc:2.9.0'
+
+
+    //testCompile "net.chrisrichardson.eventstore.examples
+    //.customersandorders:common-contracts:1.0-SNAPSHOT"
+    
+    testCompile 'com.pholser:junit-quickcheck-core:0.7'
+    testCompile 'com.pholser:junit-quickcheck-generators:0.7'
+    testCompile "junit:junit:4.12"
+    testCompile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+    testCompile "io.eventuate.client.java:eventuate-client-java-jdbc:$eventuateClientVersion"
+}
+
+
