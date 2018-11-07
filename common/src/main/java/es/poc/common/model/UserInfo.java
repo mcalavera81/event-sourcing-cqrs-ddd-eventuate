@@ -1,8 +1,16 @@
 package es.poc.common.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Value;
+
 import java.util.List;
 import java.util.Objects;
 
+@Data
+@AllArgsConstructor(staticName = "of")
+@NoArgsConstructor
 public class UserInfo {
 
   private String name;
@@ -10,41 +18,5 @@ public class UserInfo {
   private String email;
 
 
-  public UserInfo() {
-  }
-
-  public UserInfo(String name, String surname, String email) {
-    this.name = name;
-    this.surname = surname;
-    this.email = email;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getSurname() {
-    return surname;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    UserInfo orderInfo = (UserInfo) o;
-    return Objects.equals(name, orderInfo.name) &&
-      Objects.equals(surname, orderInfo.surname) &&
-      Objects.equals(email, orderInfo.email);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(name, surname, email);
-  }
 
 }

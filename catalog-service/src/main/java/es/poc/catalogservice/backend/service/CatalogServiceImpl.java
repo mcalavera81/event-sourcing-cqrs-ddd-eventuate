@@ -23,6 +23,7 @@ public class CatalogServiceImpl implements CatalogService {
   @Override
   public EntityWithIdAndVersion<CatalogEntry> createEntry
     (CatalogEntryInfo entryInfo) {
+
     return aggregateRepo.save(new CreateCatalogEntryCommand(entryInfo));
   }
 

@@ -4,6 +4,7 @@ import es.poc.catalogviewservice.backend.domain.CatalogView;
 import es.poc.catalogviewservice.backend.repository.CatalogViewRepository;
 import es.poc.common.model.CatalogEntryInfo;
 import es.poc.common.model.Money;
+import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import static es.poc.catalogviewservice.TestUtils.newCatalogView;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertSame;
 
@@ -35,16 +37,11 @@ public class CustomerViewRepositoryTest {
   @Test
   public void shouldCreateAndFindCatalogEntry() {
 
-    CatalogEntryInfo info= new CatalogEntryInfo(
-      "ulr",
-      "name",
-      "desc",
-      new Money(300));
 
-    CatalogView view = new CatalogView("id", info);
+    CatalogView view = newCatalogView("1",300);
     catalogRepo.save(view);
 
-    CatalogView viewDb = catalogRepo.findOne("id");
+    CatalogView viewDb = catalogRepo.findOne(view.getId());
     assertEquals(view, viewDb);
   }
 }

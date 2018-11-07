@@ -11,6 +11,7 @@ import es.poc.common.model.CatalogEntryInfo;
 import es.poc.common.model.Money;
 import io.eventuate.EntityWithIdAndVersion;
 import io.eventuate.sync.AggregateRepository;
+import lombok.val;
 import org.hamcrest.core.IsInstanceOf;
 import org.hibernate.sql.Update;
 import org.junit.Before;
@@ -38,19 +39,18 @@ public class CatalogServiceTest {
   @Test
   public void shouldCreateCatalogEntry() {
 
-    EntityWithIdAndVersion<CatalogEntry> returned = new EntityWithIdAndVersion<>(null, null);
+
+    val returned =new EntityWithIdAndVersion<CatalogEntry>(null, null);
 
     when(aggregateRepo.save(any(CreateCatalogEntryCommand.class))).thenReturn(returned);
 
-    CatalogEntryInfo info = new CatalogEntryInfo("image", "name", "desc",
-      new Money(300));
 
-    EntityWithIdAndVersion<CatalogEntry> result = catalogService.createEntry(info);
+    val info = CatalogEntryInfo.of("image", "name", "desc",Money.of(300));
+    val result = catalogService.createEntry(info);
 
     assertSame(returned, result);
 
-    ArgumentCaptor<CreateCatalogEntryCommand> argument =
-      ArgumentCaptor.forClass(CreateCatalogEntryCommand.class);
+    val argument = ArgumentCaptor.forClass(CreateCatalogEntryCommand.class);
 
     verify(aggregateRepo).save(argument.capture());
     verifyNoMoreInteractions(aggregateRepo);
@@ -66,8 +66,7 @@ public class CatalogServiceTest {
 
     String entryId = "entryId";
 
-    EntityWithIdAndVersion<CatalogEntry> returned =
-      new EntityWithIdAndVersion<>(null, null);
+    val returned = new EntityWithIdAndVersion<CatalogEntry>(null, null);
 
 
     when(aggregateRepo.update(eq(entryId),
@@ -77,8 +76,7 @@ public class CatalogServiceTest {
 
     assertSame(returned, result);
 
-    ArgumentCaptor<CatalogCommand> argument =
-      ArgumentCaptor.forClass(CatalogCommand.class);
+    val argument = ArgumentCaptor.forClass(CatalogCommand.class);
 
     verify(aggregateRepo).update(eq(entryId), argument.capture());
     verifyNoMoreInteractions(aggregateRepo);
@@ -94,22 +92,18 @@ public class CatalogServiceTest {
 
     String entryId = "entryId";
 
-    EntityWithIdAndVersion<CatalogEntry> returned =
-      new EntityWithIdAndVersion<>(null, null);
+    val returned = new EntityWithIdAndVersion<CatalogEntry>(null, null);
 
     when(aggregateRepo.update(eq(entryId),
       any(UpdateCatalogEntryCommand.class))).thenReturn(returned);
 
-    CatalogEntryInfo info = new CatalogEntryInfo("image", "name", "desc",
-      new Money(300));
+    val info = CatalogEntryInfo.of("image", "name", "desc",Money.of(300));
 
-    EntityWithIdAndVersion<CatalogEntry> result =
-      catalogService.updateEntry(entryId, info);
+    val result = catalogService.updateEntry(entryId, info);
 
     assertSame(returned, result);
 
-    ArgumentCaptor<UpdateCatalogEntryCommand> argument =
-      ArgumentCaptor.forClass(UpdateCatalogEntryCommand.class);
+    val argument = ArgumentCaptor.forClass(UpdateCatalogEntryCommand.class);
 
     verify(aggregateRepo).update(eq(entryId), argument.capture());
     verifyNoMoreInteractions(aggregateRepo);

@@ -2,12 +2,14 @@ package es.poc.catalogviewservice.backend.domain;
 
 import es.poc.common.model.CatalogEntryInfo;
 import es.poc.common.model.Money;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Objects;
 
 @Document
+@EqualsAndHashCode
 public class CatalogView {
 
   public CatalogView(){}
@@ -49,21 +51,4 @@ public class CatalogView {
   }
 
 
-  @Override
-  public boolean equals(Object o) {
-
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    CatalogView that = (CatalogView) o;
-    return Objects.equals(id, that.id) &&
-      Objects.equals(image, that.image) &&
-      Objects.equals(name, that.name) &&
-      Objects.equals(description, that.description) &&
-      Objects.equals(price, that.price);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, image, name, description, price);
-  }
 }

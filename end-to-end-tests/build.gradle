@@ -1,0 +1,28 @@
+dependencies {
+    compile project(":common")
+
+    /*compile project(":ftgo-accounting-service")
+    compile project(":ftgo-consumer-service-api")
+    compile project(":ftgo-kitchen-service-api")
+    compile project(":ftgo-restaurant-service-api")
+    compile project(":ftgo-order-service-api")
+    */
+
+    compile project(":catalog-service")
+    compile project(":order-service")
+    compile "io.eventuate.util:eventuate-util-test:$eventuateUtilVersion"
+
+
+    testCompile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+    testCompile "com.jayway.restassured:rest-assured:$restAssuredVersion"
+    testCompile "com.jayway.jsonpath:json-path:2.3.0"
+
+
+}
+
+test {
+    testLogging {
+        outputs.upToDateWhen {false}
+        showStandardStreams = true
+    }
+}

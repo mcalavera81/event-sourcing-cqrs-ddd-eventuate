@@ -22,6 +22,7 @@ import org.junit.Test;
 import java.util.LinkedList;
 import java.util.List;
 
+import static es.poc.orderservice.TestUtils.newUserInfo;
 import static io.eventuate.EventUtil.events;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -40,7 +41,7 @@ public class OrderTest {
   @Before
   public void createOrder() {
     order = new Order();
-    userInfo = new UserInfo("name", "surname", "email@domain.com");
+    userInfo = newUserInfo();;
 
     item1 =new OrderLineItem("id1", 1);
     item2=new OrderLineItem("id2", 2);

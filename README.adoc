@@ -1,0 +1,46 @@
+= Retailer example application
+
+
+== Application architecture
+
+This application has a microservice architecture. It is made up of Catalog
+subdomain and Order subdomain. Each subdomain has one to one mapping to
+a bounded context in the solution space.
+
+Each bounded context adheres to a Domain-driven Design architecture. Bounded
+contexts have 100% asynchronous communication patterns. The infrastructure
+that underlies is a set of building blocks from the Eventuate framework:
+MySql as a transtional event storage, a process implementing Change Data
+Capture (CDC) to relay the Aggregate events to Kafka, kafka as a message
+broker (zookeper is needed).
+
+There are the following services:
+
+* link:./catalog-service[catalog-service] - the `Catalog Service`
+* link:./catalog-view-service[catalog-view-service] - the `Catalog View Service`
+* link:./order-service[order-service] - the `Order Service`
+
+== Service design
+
+Key points:
+
+* A service consists of a single Gradle module.
+* A service is a Spring Boot application.
+* A service has a Swagger UI `http://.../swagger-ui.html`. See `show-swagger-urls.sh`
+* A service typically consists of the following packages:
+** backend.domain - domain logic including aggregates
+** backend.handlers - messaging handlers
+** backend.service -  use case scenarios
+** backend.repository -  CQRS views materialization
+** web - Spring MVC controllers
+
+* The services use the following framework for event sourcing support:
+** https://github.com/eventuate-clients/eventuate-client-java[`Eventuate Client framework`] - implements event sourcing
+
+== Building and running the application
+
+=== Pre-requisites
+
+* Java 8
+* Docker and Docker Compose
+* Internet access so that Gradle and Docker can download dependencies and container images

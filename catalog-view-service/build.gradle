@@ -38,7 +38,7 @@ dockerCompose {
     }
 }
 
-componentTest.dependsOn(componentTestsComposeUp)
+//componentTest.dependsOn(componentTestsComposeUp)
 
 
 dependencies {

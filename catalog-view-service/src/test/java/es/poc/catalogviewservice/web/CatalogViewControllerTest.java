@@ -6,6 +6,7 @@ import es.poc.catalogviewservice.backend.repository.CatalogViewRepository;
 import es.poc.common.config.CommonConfiguration;
 import es.poc.common.model.CatalogEntryInfo;
 import es.poc.common.model.Money;
+import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder;
 
 import static com.jayway.restassured.module.mockmvc.RestAssuredMockMvc.given;
+import static es.poc.catalogviewservice.TestUtils.newCatalogView;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
@@ -43,11 +45,7 @@ public class CatalogViewControllerTest {
 
   @Test
   public void shouldGetCatalogEntry() {
-    CatalogEntryInfo info= new CatalogEntryInfo(
-      "ulr2",
-      "name2",
-      "desc2",
-      new Money(600));
+    val info= CatalogEntryInfo.of("ulr2","name2","desc2",Money.of(600));
 
     CatalogView view = new CatalogView("id", info);
     when(catalogDao.findOne("id")).thenReturn(view);
@@ -76,20 +74,10 @@ public class CatalogViewControllerTest {
 
   @Test
   public void shouldGetAllEntries() {
-    CatalogEntryInfo info1= new CatalogEntryInfo(
-      "ulr1",
-      "name1",
-      "desc1",
-      new Money(300));
 
-    CatalogEntryInfo info2= new CatalogEntryInfo(
-      "ulr2",
-      "name2",
-      "desc2",
-      new Money(600));
+    val view1 = newCatalogView("1",300);
+    val view2 = newCatalogView("2", 600);
 
-    CatalogView view1 = new CatalogView("id1", info1);
-    CatalogView view2 = new CatalogView("id2", info2);
     when(catalogDao.findAll()).thenReturn(asList(view1, view2));
 
 

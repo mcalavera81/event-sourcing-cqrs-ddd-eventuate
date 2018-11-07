@@ -1,18 +1,15 @@
 package es.poc.catalogservice.web;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CreateCatalogEntryResponse {
   private String entryId;
-
-  public CreateCatalogEntryResponse() {
-  }
-
-  public CreateCatalogEntryResponse(String entryId) {
-    this.entryId = entryId;
-
-  }
-
-  public String getEntryId() {
-    return entryId;
-  }
 }

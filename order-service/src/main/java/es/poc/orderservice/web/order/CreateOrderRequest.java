@@ -2,38 +2,19 @@ package es.poc.orderservice.web.order;
 
 
 import es.poc.common.model.UserInfo;
+import lombok.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor(staticName = "of")
 public class CreateOrderRequest {
+  @NotNull
   private UserInfo userInfo;
+  @Valid
   private List<LineItemView> lineItems;
-
-  public CreateOrderRequest() {
-  }
-
-  public CreateOrderRequest(
-    UserInfo info,
-    List<LineItemView> lineItems) {
-    this.userInfo = info;
-    this.lineItems = lineItems;
-  }
-
-  public UserInfo getUserInfo() {
-    return userInfo;
-  }
-
-  public List<LineItemView> getLineItems() {
-    return lineItems;
-  }
-
-  public void setUserInfo(UserInfo userInfo) {
-    this.userInfo = userInfo;
-  }
-
-  public void setLineItems(List<LineItemView> lineItems) {
-    this.lineItems = lineItems;
-  }
-
 
 }

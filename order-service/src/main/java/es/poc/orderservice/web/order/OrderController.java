@@ -4,10 +4,6 @@ package es.poc.orderservice.web.order;
 import es.poc.orderservice.backend.domain.Order;
 import es.poc.common.model.OrderLineItem;
 import es.poc.orderservice.backend.service.OrderService;
-import es.poc.orderservice.web.order.CreateOrderRequest;
-import es.poc.orderservice.web.order.CreateOrderResponse;
-import es.poc.orderservice.web.order.GetOrderResponse;
-import es.poc.orderservice.web.order.LineItemView;
 import io.eventuate.EntityNotFoundException;
 import io.eventuate.EntityWithIdAndVersion;
 import io.eventuate.EntityWithMetadata;
@@ -16,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,23 +28,18 @@ public class OrderController {
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  public CreateOrderResponse createOrder(@RequestBody CreateOrderRequest createOrderRequest) {
+  public ResponseEntity<CreateOrderResponse> createOrder(@Valid @RequestBody CreateOrderRequest request) {
 
-    List<OrderLineItem> items = createOrderRequest
-      .getLineItems()
-      .stream()
-      .map(li -> new OrderLineItem(li.getItemId(), li.getQuantity()))
-      .collect(Collectors.toList());
+    EntityWithIdAndVersion<Order> results;
+    try{
+      results =
+        orderService.createOrder(request.getUserInfo(),adaptOrderLineItems(request));
+    }catch (IllegalStateException e){
+      return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 
-    EntityWithIdAndVersion<Order> results =
-      orderService.createOrder(
-        createOrderRequest.getUserInfo(),
-        items);
+    return buildCreateOrderResponse(results);
 
-
-    return new CreateOrderResponse(
-      results.getEntityId(),
-      results.getAggregate().getTotal());
   }
 
   @RequestMapping(value = "/{orderId}", method = RequestMethod.GET)
@@ -58,12 +50,34 @@ public class OrderController {
     } catch (EntityNotFoundException e) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    return buildGetOrderResponse(entryWithMetadata);
+  }
+
+  private ResponseEntity<CreateOrderResponse> buildCreateOrderResponse(EntityWithIdAndVersion<Order> results) {
+    CreateOrderResponse response =new CreateOrderResponse(
+      results.getEntityId(),
+      results.getAggregate().getTotal());
+    return new ResponseEntity<>(response, HttpStatus.OK);
+  }
+
+  private List<OrderLineItem> adaptOrderLineItems(CreateOrderRequest createOrderRequest) {
+    return createOrderRequest
+      .getLineItems()
+      .stream()
+      .map(li -> new OrderLineItem(li.getItemId(), li.getQuantity()))
+      .collect(Collectors.toList());
+  }
+
+
+  private ResponseEntity<GetOrderResponse> buildGetOrderResponse(EntityWithMetadata<Order> entryWithMetadata) {
+
     Order order = entryWithMetadata.getEntity();
 
     List<LineItemView> items = order
       .getItems()
       .stream()
-      .map(li -> new LineItemView(li.getId(), li.getQuantity(), li.getPrice()))
+      .map(li -> LineItemView.of(li.getId(), li.getQuantity(), li.getPrice()))
       .collect(Collectors.toList());
 
     GetOrderResponse response =

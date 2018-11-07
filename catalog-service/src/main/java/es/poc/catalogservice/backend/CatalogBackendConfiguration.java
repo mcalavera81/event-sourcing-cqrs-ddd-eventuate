@@ -1,10 +1,12 @@
 package es.poc.catalogservice.backend;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import es.poc.catalogservice.backend.command.CatalogCommand;
 import es.poc.catalogservice.backend.domain.CatalogEntry;
 import es.poc.catalogservice.backend.handlers.CatalogEventSubscriber;
 import es.poc.catalogservice.backend.service.CatalogService;
 import es.poc.catalogservice.backend.service.CatalogServiceImpl;
+import es.poc.common.config.MoneyModule;
 import io.eventuate.javaclient.spring.EnableEventHandlers;
 import io.eventuate.sync.AggregateRepository;
 import io.eventuate.sync.EventuateAggregateStore;
@@ -39,8 +41,8 @@ public class CatalogBackendConfiguration {
   }
 
   @Bean
-  public HttpMessageConverters customConverters() {
-    HttpMessageConverter<?> additional = new MappingJackson2HttpMessageConverter();
-    return new HttpMessageConverters(additional);
+  public MappingJackson2HttpMessageConverter myConverter() {
+    return new MappingJackson2HttpMessageConverter(new ObjectMapper().registerModule(new MoneyModule()));
   }
+
 }

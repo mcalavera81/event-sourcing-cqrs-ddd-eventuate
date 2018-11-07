@@ -10,6 +10,7 @@ import es.poc.common.model.Money;
 import io.eventuate.EntityWithIdAndVersion;
 import io.eventuate.EntityWithMetadata;
 import io.eventuate.sync.AggregateRepository;
+import lombok.val;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,14 +27,13 @@ public class CatalogPersistenceTest {
   private AggregateRepository<CatalogEntry, CatalogCommand> repo;
 
   @Test
-  public void shouldCreateAndUpdateCustomer() {
+  public void shouldCreateAndUpdateCatalogEntry() {
 
 
-    final Money initialPrice = new Money(300);
+    val initialPrice = Money.of(300);
 
-    CatalogEntryInfo info= new CatalogEntryInfo("ulr", "name", "desc", initialPrice);
-    EntityWithIdAndVersion<CatalogEntry> saveResults=
-      repo.save(new CreateCatalogEntryCommand(info));
+    val info= CatalogEntryInfo.of("ulr", "name", "desc", initialPrice);
+    val saveResults=repo.save(new CreateCatalogEntryCommand(info));
 
     final String entityId = saveResults.getEntityId();
     Assert.assertNotNull(entityId);
@@ -41,7 +41,7 @@ public class CatalogPersistenceTest {
     EntityWithMetadata<CatalogEntry> getResults =repo.find(entityId);
     Assert.assertEquals(initialPrice,getResults.getEntity().getInfo().getPrice());
 
-    final Money updatedPrice = new Money(400);
+    val updatedPrice = Money.of(400);
     info.setPrice(updatedPrice);
     repo.update(entityId,new UpdateCatalogEntryCommand(info));
 

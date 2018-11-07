@@ -13,6 +13,7 @@ import es.poc.common.model.Money;
 import io.eventuate.Aggregates;
 import io.eventuate.DefaultMissingApplyEventMethodStrategy;
 import io.eventuate.Event;
+import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,27 +35,10 @@ public class CatalogTest {
   }
 
 
-  private <T extends CatalogCommand> void process(T command) {
-    events = catalogEntry.processCommand(command);
-  }
-
-  private void applyEventsToMutableAggregate() {
-    Aggregates.applyEventsToMutableAggregate(catalogEntry, events, DefaultMissingApplyEventMethodStrategy.INSTANCE);
-  }
-
-  private void initializeCatalogEntry() {
-
-    CatalogEntryInfo info = new CatalogEntryInfo("image", "name", "desc",
-      new Money(300));
-    process(new CreateCatalogEntryCommand(info));
-    applyEventsToMutableAggregate();
-  }
-
   @Test
   public void shouldCreate() {
 
-    CatalogEntryInfo info = new CatalogEntryInfo("image", "name", "desc",
-      new Money(300));
+    val info = CatalogEntryInfo.of("image", "name", "desc",Money.of(300));
 
     process(new CreateCatalogEntryCommand(info));
 
@@ -87,8 +71,7 @@ public class CatalogTest {
     initializeCatalogEntry();
 
 
-    CatalogEntryInfo info = new CatalogEntryInfo("new_image", "name", "desc",
-      new Money(400));
+    val info = CatalogEntryInfo.of("new_image", "name", "desc",Money.of(400));
     process(new UpdateCatalogEntryCommand(info));
 
 
@@ -98,6 +81,21 @@ public class CatalogTest {
 
     assertEquals(info,catalogEntry.getInfo());
 
+  }
+
+  private <T extends CatalogCommand> void process(T command) {
+    events = catalogEntry.processCommand(command);
+  }
+
+  private void applyEventsToMutableAggregate() {
+    Aggregates.applyEventsToMutableAggregate(catalogEntry, events, DefaultMissingApplyEventMethodStrategy.INSTANCE);
+  }
+
+  private void initializeCatalogEntry() {
+
+    val info = CatalogEntryInfo.of("image", "name", "desc",Money.of(300));
+    process(new CreateCatalogEntryCommand(info));
+    applyEventsToMutableAggregate();
   }
 
   private void assertEventEquals(Event expectedEvent) {

@@ -4,4 +4,5 @@ include 'common-swagger'
 include 'catalog-service'
 include 'catalog-view-service'
 include 'order-service'
+include 'end-to-end-tests'
 

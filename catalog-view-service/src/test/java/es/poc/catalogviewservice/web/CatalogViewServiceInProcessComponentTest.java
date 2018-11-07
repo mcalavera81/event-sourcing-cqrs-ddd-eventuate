@@ -1,10 +1,8 @@
 package es.poc.catalogviewservice.web;
 
 import com.jayway.restassured.http.ContentType;
-import es.poc.catalogviewservice.backend.domain.CatalogView;
 import es.poc.catalogviewservice.backend.repository.CatalogViewRepository;
-import es.poc.common.model.CatalogEntryInfo;
-import es.poc.common.model.Money;
+import lombok.val;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static com.jayway.restassured.RestAssured.given;
+import static es.poc.catalogviewservice.TestUtils.newCatalogView;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 @RunWith(SpringRunner.class)
@@ -35,27 +34,23 @@ public class CatalogViewServiceInProcessComponentTest {
   @Test
   public void shouldCreateCatalogEntry() {
     String catalogUrl = baseUrl("/catalog");
-    String entryId = "id";
 
-    CatalogEntryInfo info = new CatalogEntryInfo(
-      "image", "name", "desc", new Money(300));
-
-    CatalogView view = new CatalogView(entryId, info);
+    val view = newCatalogView("1",300);
     repo.save(view);
 
     // @formatter:off
-   given().
+  given().
      //filter(new RequestLoggingFilter()).
   when().
-     get(catalogUrl+"/"+entryId).
+     get(catalogUrl+"/"+view.getId()).
   then().
      statusCode(HttpStatus.OK.value()).
      contentType(ContentType.JSON).
-     body("id", equalTo(entryId)).
-     body("image", equalTo(info.getImage())).
-     body("name", equalTo(info.getName())).
-     body("description", equalTo(info.getDescription())).
-     body("price", equalTo(info.getPrice().asString()));
+     body("id", equalTo(view.getId())).
+     body("image", equalTo(view.getImage())).
+     body("name", equalTo(view.getName())).
+     body("description", equalTo(view.getDescription())).
+     body("price", equalTo(view.getPrice().asString()));
   // @formatter:on
 
   }

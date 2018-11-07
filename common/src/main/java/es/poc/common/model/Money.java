@@ -1,14 +1,22 @@
 package es.poc.common.model;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 
+@EqualsAndHashCode
+@ToString
+@Getter
 public class Money {
 
-  public static final Money ZERO = new Money(0);
+  public static final Money ZERO = Money.of(0);
+
   private BigDecimal amount;
 
   public Money() {
@@ -16,6 +24,10 @@ public class Money {
 
   public Money(String s) {
     this.amount = new BigDecimal(s);
+  }
+
+  public static Money of(int i){
+    return new Money(i);
   }
 
   public Money(int i) {
@@ -30,46 +42,13 @@ public class Money {
     return amount.toPlainString();
   }
 
-  /*
-  If this >= other
-   */
-  public boolean isGreaterThanOrEqual(Money other) {
-    return amount.compareTo(other.amount) >= 0;
-  }
+
   public Money add(Money other) {
     return new Money(amount.add(other.amount));
-  }
-  public Money subtract(Money other) {
-    return new Money(amount.subtract(other.amount));
   }
 
   public Money multiply(int x) {
     return new Money(amount.multiply(new BigDecimal(x)));
   }
-
-
-  @Override
-  public String toString() {
-    return ToStringBuilder.reflectionToString(this);
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return EqualsBuilder.reflectionEquals(this, obj);
-  }
-
-  @Override
-  public int hashCode() {
-    return HashCodeBuilder.reflectionHashCode(this);
-  }
-
-  public BigDecimal getAmount() {
-    return amount;
-  }
-
-  public void setAmount(BigDecimal amount) {
-    this.amount = amount;
-  }
-
 
 }

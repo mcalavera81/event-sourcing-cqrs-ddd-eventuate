@@ -22,4 +22,5 @@ subprojects {
         jcenter()
         eventuateMavenRepoUrl.split(',').each { repoUrl -> maven { url repoUrl } }
     }
+
 }
