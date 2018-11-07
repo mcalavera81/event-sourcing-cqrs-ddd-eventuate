@@ -44,3 +44,63 @@ Key points:
 * Java 8
 * Docker and Docker Compose
 * Internet access so that Gradle and Docker can download dependencies and container images
+
+
+=== Setting environment variables
+
+To run the application you must set the `DOCKER_HOST_IP` environment variable to
+ the IP address of where the Docker containers are running.
+
+On Linux you might get some help with:
+
+```
+hostname -I
+```
+
+or
+
+```
+ifconfig
+```
+
+Do NOT set it to the (unresolvable) hostname of your machine,
+`localhost` or `127.0.0.1`.
+
+
+=== Building and Testing
+
+```
+DOCKER_HOST_IP=<IP> ./_build-and-test-all.sh
+```
+
+=== Building and Running
+
+```
+DOCKER_HOST_IP=<IP> ./build-and-run.sh
+```
+
+=== Stopping the application
+
+Stop the application using this command:
+
+```
+./stop-and-rm.sh
+```
+
+=== Using the application
+
+Use the services Swagger UIs to invoke the services.
+
+* Create Catalog Entry - `http://${DOCKER_HOST_IP?}:8081/swagger-ui.html`
+* View the Catalog Entry Query Side - `http://${DOCKER_HOST_IP?}:8082/swagger-ui.html`
+* Create an order - `http://${DOCKER_HOST_IP?}:8083/swagger-ui.html`
+
+To get  better grasp of the application, the end-to-end test runs a
+comprehensive scenario:
+
+* Phone entry created on Catalog command side.
+* Order created on Order command side.
+* Phone entry modified on Catalog command side.
+* Order created on Order command side with the modified phone.
+* Phone entry deleted.
+* Attempt to create an Order with a non-existent Phone record (422 Error).
